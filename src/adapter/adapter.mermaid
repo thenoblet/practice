@@ -1,0 +1,68 @@
+graph TB
+%% Entry Point
+    subgraph "Entry Point"
+        Main["Main Application<br/>Entry Point"]
+    end
+
+%% Client Layer
+    subgraph "Client Layer"
+        AudioPlayer["AudioPlayer<br/>• Built-in MP3 support<br/>• Delegates to adapter for other formats<br/>• Implements MediaPlayer"]
+    end
+
+%% Target Interface Layer
+    subgraph "Target Interface"
+        MediaPlayer["MediaPlayer Interface<br/>• play(audioType, fileName)<br/>• Standard contract for clients"]
+    end
+
+%% Adapter Layer - Key Pattern Component
+    subgraph "Adapter Layer"
+        MediaAdapter["MediaAdapter<br/>• Implements MediaPlayer<br/>• Wraps AdvancedMediaPlayer<br/>• Translates method calls<br/>• Factory for concrete players"]
+    end
+
+%% Adaptee Interface Layer
+    subgraph "Adaptee Interface"
+        AdvancedMediaPlayer["AdvancedMediaPlayer Interface<br/>• playVLC(fileName)<br/>• playMP4(fileName)<br/>• Legacy/Third-party contract"]
+    end
+
+%% Concrete Adaptee Layer
+    subgraph "Concrete Adaptees"
+        VLCPlayer["VLCPlayer<br/>• Handles VLC format<br/>• Implements AdvancedMediaPlayer<br/>• playVLC() implementation"]
+        MP4Player["MP4Player<br/>• Handles MP4 format<br/>• Implements AdvancedMediaPlayer<br/>• playMP4() implementation"]
+    end
+
+%% Data Transfer Objects
+    subgraph "Method Parameters"
+        AudioType["audioType: String<br/>Format identifier"]
+        FileName["fileName: String<br/>File path/name"]
+    end
+
+%% Relationships
+    Main --> AudioPlayer
+    AudioPlayer --> MediaPlayer
+    AudioPlayer --> MediaAdapter
+    MediaAdapter --> MediaPlayer
+    MediaAdapter --> AdvancedMediaPlayer
+    MediaAdapter --> VLCPlayer
+    MediaAdapter --> MP4Player
+    AdvancedMediaPlayer --> VLCPlayer
+    AdvancedMediaPlayer --> MP4Player
+
+    AudioPlayer --> AudioType
+    AudioPlayer --> FileName
+    MediaAdapter --> AudioType
+    MediaAdapter --> FileName
+
+%% Styling
+    classDef clientStyle fill:#2196f3,stroke:#0d47a1,stroke-width:3px,color:#fff
+    classDef targetStyle fill:#9c27b0,stroke:#4a148c,stroke-width:3px,color:#fff
+    classDef adapterStyle fill:#ff5722,stroke:#bf360c,stroke-width:4px,color:#fff
+    classDef adapteeStyle fill:#4caf50,stroke:#1b5e20,stroke-width:3px,color:#fff
+    classDef concreteStyle fill:#8bc34a,stroke:#33691e,stroke-width:2px,color:#fff
+    classDef paramStyle fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+
+    class Main,AudioPlayer clientStyle
+    class MediaPlayer targetStyle
+    class MediaAdapter adapterStyle
+    class AdvancedMediaPlayer adapteeStyle
+    class VLCPlayer,MP4Player concreteStyle
+    class AudioType,FileName paramStyle
