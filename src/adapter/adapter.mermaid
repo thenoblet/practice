@@ -6,7 +6,7 @@ graph TB
 
 %% Client Layer
     subgraph "Client Layer"
-        AudioPlayer["AudioPlayer<br/>• Built-in MP3 support<br/>• Delegates to adapter for other formats<br/>• Implements MediaPlayer"]
+        AudioPlayer["AudioPlayer<br/>• Built-in MP3 support<br/>• Creates concrete players<br/>• Injects into MediaAdapter<br/>• Implements MediaPlayer"]
     end
 
 %% Target Interface Layer
@@ -16,7 +16,7 @@ graph TB
 
 %% Adapter Layer - Key Pattern Component
     subgraph "Adapter Layer"
-        MediaAdapter["MediaAdapter<br/>• Implements MediaPlayer<br/>• Wraps AdvancedMediaPlayer<br/>• Translates method calls<br/>• Factory for concrete players"]
+        MediaAdapter["MediaAdapter<br/>• Implements MediaPlayer<br/>• Wraps injected AdvancedMediaPlayer<br/>• Translates method calls<br/>• No direct instantiation"]
     end
 
 %% Adaptee Interface Layer
@@ -40,10 +40,10 @@ graph TB
     Main --> AudioPlayer
     AudioPlayer --> MediaPlayer
     AudioPlayer --> MediaAdapter
+    AudioPlayer --> VLCPlayer
+    AudioPlayer --> MP4Player
     MediaAdapter --> MediaPlayer
     MediaAdapter --> AdvancedMediaPlayer
-    MediaAdapter --> VLCPlayer
-    MediaAdapter --> MP4Player
     AdvancedMediaPlayer --> VLCPlayer
     AdvancedMediaPlayer --> MP4Player
 

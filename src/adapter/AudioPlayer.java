@@ -21,11 +21,10 @@ public class AudioPlayer implements MediaPlayer {
     }
 
     private AdvancedMediaPlayer createPlayer(String audioType) {
-        if(audioType.equalsIgnoreCase("vlc")) {
-            return new VLCPlayer();
-        } else if(audioType.equalsIgnoreCase("mp4")) {
-            return new MP4Player();
-        }
-        return null;
+        return switch (audioType.toLowerCase()) {
+            case "vlc" -> new VLCPlayer();
+            case "mp4" -> new MP4Player();
+            default -> throw new UnsupportedOperationException("Unsupported type: " + audioType);
+        };
     }
 }
